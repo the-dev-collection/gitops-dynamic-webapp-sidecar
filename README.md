@@ -1,0 +1,1 @@
+# gitops-dynamic-webapp-sidecar
