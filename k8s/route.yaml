@@ -1,0 +1,10 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: dynamic-web
+spec:
+  to:
+    kind: Service
+    name: dynamic-web
+  port:
+    targetPort: 8080

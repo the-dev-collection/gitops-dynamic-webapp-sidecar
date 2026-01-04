@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dynamic-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dynamic-web
+  template:
+    metadata:
+      labels:
+        app: dynamic-web
+    spec:
+      volumes:
+        - name: shared-content
+          emptyDir: {}
+        - name: configmap-volume
+          configMap:
+            name: web-content
+
+      containers:
+        # MAIN WEB SERVER
+        - name: httpd
+          image: registry.access.redhat.com/ubi8/httpd-24:latest
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: shared-content
+              mountPath: /var/www/html
+
+        # SIDECAR
+        - name: sync-sidecar
+          image: registry.access.redhat.com/ubi8/python-39
+          command:
+            - /bin/bash
+            - -c
+            - |
+              echo "Starting ConfigMap sync sidecar..."
+              while true; do
+                cp -u /config/index.html /shared/index.html 2>/dev/null
+                sleep 2
+              done
+          volumeMounts:
+            - name: shared-content
+              mountPath: /shared
+            - name: configmap-volume
+              mountPath: /config

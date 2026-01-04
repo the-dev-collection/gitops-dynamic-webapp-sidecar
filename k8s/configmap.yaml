@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: web-content
+data:
+  index.html: |
+    <html>
+      <head>
+        <title>GitOps Dynamic Sidecar Demo</title>
+      </head>
+      <body style="font-family: Arial; padding: 40px; background: #fafafa;">
+        <h1 style="color: #c00;">Welcome to GitOps Dynamic App – Version 1</h1>
+        <p>This content updates instantly without restarting pods.</p>
+      </body>
+    </html>
